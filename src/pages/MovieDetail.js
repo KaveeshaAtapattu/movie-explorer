@@ -28,34 +28,70 @@ const MovieDetail = () => {
           fetchMovieDetail();
         }, [id]);
       
-        if (!movie) return <div>Loading...</div>;
-      
+        if (!movie) {
+          return (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: "2rem",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          );
+        }
         return (
-          <Container sx={{ mt: 4 }}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            style={{ width: "100%", borderRadius: "10px" }}
-          />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Typography variant="h4" gutterBottom>
-            {movie.title}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            <strong>Overview:</strong> {movie.overview}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Release Date:</strong> {movie.release_date}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Rating:</strong> {movie.vote_average}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Container>
+          <Box sx={{ padding: "2rem" }}>
+            <Grid container spacing={4}>
+              {/* Left column: poster */}
+              <Grid item xs={12} md={4}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  style={{ width: "100%", borderRadius: "10px" }}
+                />
+              </Grid>
+
+              {/* Right column: details */}
+              <Grid item xs={12} md={8}>
+                <Typography variant="h4" gutterBottom>
+                  {movie.title}
+                </Typography>
+
+                {/* Genre tags */}
+                {movie.genres && (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+                    {movie.genres.map((genre) => (
+                      <Box
+                        key={genre.id}
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          backgroundColor: "#1976d2",
+                          color: "#fff",
+                          borderRadius: "20px",
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        {genre.name}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+
+                <Typography variant="body1" gutterBottom>
+                  <strong>Overview:</strong> {movie.overview}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Release Date:</strong> {movie.release_date}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Rating:</strong> {movie.vote_average}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
         );
       };
       
