@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useContext} from "react";
 import {useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Button, Grid, Box, Typography, CircularProgress } from '@mui/material';
+import { Button, Grid, Box, Typography, CircularProgress } from '@mui/material';
 import FavoritesContext from '../context/FavoritesContext'; 
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
