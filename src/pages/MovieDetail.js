@@ -3,6 +3,8 @@ import {useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Grid, Box, Typography, CircularProgress } from '@mui/material';
 import FavoritesContext from '../context/FavoritesContext'; 
+import { fetchMovieDetails, fetchMovieVideos } from '../api';
+
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASIC_URL = 'https://api.themoviedb.org/3';
@@ -15,6 +17,7 @@ const MovieDetail = () => {
     const [movie, setMovie] = useState(null);
     const [cast, setCast] = useState([]);
     const { favorites, toggleFavorite } = useContext(FavoritesContext);
+    const [trailerKey, setTrailerKey] = useState('');
 
 
     
@@ -40,6 +43,20 @@ const MovieDetail = () => {
             console.error('Error fetching Cast detail:', error);
           }
         };
+
+                const fetchTrailer = async () => {
+            try {
+                const response = await axios.get(`${BASIC_URL}/movie/${id}/videos?api_key=${API_KEY}`);
+                const trailer = response.data.results.find((video) => video.type === 'Trailer');
+                if (trailer) {
+                    setTrailerKey(trailer.key);
+                }
+            } catch (error) {
+                console.error('Error fetching trailer:', error);
+            }
+        };
+
+        fetchMovieDetail();
         fetchMovieDetail();
         fetchCast();
 
@@ -120,6 +137,20 @@ const MovieDetail = () => {
                   <strong>Rating:</strong> {movie.vote_average}
                 </Typography>
                 
+                {trailerKey && (
+                  <Box sx={{ marginTop: '20px' }}>
+                      <Typography variant="h5">Watch Trailer:</Typography>
+                      <iframe
+                        width="100%"
+                        height="500"
+                        src={`https://www.youtube.com/embed/${trailerKey}`}
+                        title="Trailer"
+                        frameBorder="0"
+                        allowFullScreen
+                      />
+                    </Box>
+                )}
+
               </Grid>
             </Grid>
 
