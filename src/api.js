@@ -1,7 +1,12 @@
 import axios from 'axios';
+import { Route } from 'react-router-dom';
+import MovieDetail from './pages/MovieDetail';
+
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASIC_URL = 'https://api.themoviedb.org/3';
+
+<Route path = "/movie/:id" element={<MovieDetail />} />
 
 console.log('TMDB API KEY: ',API_KEY);
 

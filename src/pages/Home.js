@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { fetchTrendingMovies } from '../api';
 import MovieCard from '../components/MovieCard';
 import { Grid, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 
 export default function Home() {
@@ -24,9 +25,12 @@ export default function Home() {
             <Grid container spacing={2}>
                 {movies.length > 0 ? (
                     movies.map(movie => (
+                        <Link to={`/movie/${movie.id}`} key={movie.id} style={{textDecoration: 'none'}}>
                         <Grid item key ={movie.id}>
                             <MovieCard movie={movie}/>
+                        
                         </Grid>
+                        </Link>
                     ))
                     ) : (
                     <Typography>No trending movies available.</Typography>
