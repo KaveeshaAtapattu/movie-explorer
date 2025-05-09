@@ -7,10 +7,14 @@ import { Container, Grid, Box, Typography, CircularProgress } from '@mui/materia
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASIC_URL = 'https://api.themoviedb.org/3';
 
+
+
 const MovieDetail = () => {
     
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
+    const [cast, setCast] = useState([]);
+
 
     
 
@@ -20,12 +24,25 @@ const MovieDetail = () => {
               const response = await axios.get(`${BASIC_URL}/movie/${id}?api_key=${API_KEY}`);
               
               setMovie(response.data);
+              
             } catch (error) {
               console.error('Error fetching movie detail:', error);
             }
           };
       
-          fetchMovieDetail();
+        
+        const fetchCast = async () => {
+          try {
+            const response = await axios.get(`${BASIC_URL}/movie/${id}/credits?api_key=${API_KEY}`);
+            setCast(response.data.cast.slice(0, 5));
+          } catch (error) {
+            console.error('Error fetching Cast detail:', error);
+          }
+        };
+        fetchMovieDetail();
+        fetchCast();
+
+
         }, [id]);
       
         if (!movie) {
@@ -89,8 +106,34 @@ const MovieDetail = () => {
                 <Typography variant="body2">
                   <strong>Rating:</strong> {movie.vote_average}
                 </Typography>
+                
               </Grid>
             </Grid>
+
+          <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+            Top Cast
+          </Typography>
+          <Grid container spacing={2}>
+            {cast.map((actor) => (
+              <Grid item xs={6} md={2} key={actor.id}>
+                <Box sx={{ textAlign: "center" }}>
+                  <img
+                    src={
+                      actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                        : "https://via.placeholder.com/200x300?text=No+Image"
+                    }
+                    alt={actor.name}
+                    style={{ width: "100%", borderRadius: "8px", height: "auto" }}
+                  />
+                  <Typography variant="subtitle2">{actor.name}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    as {actor.character}
+                  </Typography>
+                </Box> 
+              </Grid>
+            ))}
+          </Grid>
           </Box>
         );
       };
