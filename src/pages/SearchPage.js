@@ -6,11 +6,11 @@ const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASIC_URL = 'https://api.themoviedb.org/3';
 
 const SearchPage = () => {
-  const [query, setQuery] = useState(""); // State for search input
-  const [movies, setMovies] = useState([]); // State for search results
-  const [loading, setLoading] = useState(false); // State for loading indicator
+  const [query, setQuery] = useState(""); 
+  const [movies, setMovies] = useState([]); 
+  const [loading, setLoading] = useState(false); 
 
-  // Function to handle search
+  // to handle search
   const handleSearch = async () => {
     if (!query) return; // Prevent empty search
 
@@ -30,7 +30,7 @@ const SearchPage = () => {
         Search Movies
       </Typography>
 
-      {/* Search Input */}
+      
       <Box sx={{ display: "flex", mb: 3 }}>
         <TextField
           label="Movie Title"
@@ -49,21 +49,21 @@ const SearchPage = () => {
         </Button>
       </Box>
 
-      {/* Loading Indicator */}
+      
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
       )}
 
-      {/* Movie Results */}
+      
       {!loading && movies.length === 0 && query && (
         <Typography variant="h6" color="textSecondary">
           No results found for "{query}"
         </Typography>
       )}
 
-      {/* Display the movie results */}
+      
       <Grid container spacing={4}>
         {movies.map((movie) => (
           <Grid item xs={12} sm={6} md={4} key={movie.id}>

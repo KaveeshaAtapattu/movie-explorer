@@ -12,11 +12,11 @@ export const FavoritesProvider = ({ children}) => {
 
     const toggleFavorite = (movie) => {
     const updatedFavorites = favorites.some(fav => fav.id === movie.id)
-      ? favorites.filter(fav => fav.id !== movie.id) // Remove from favorites
-      : [...favorites, movie]; // Add to favorites
+      ? favorites.filter(fav => fav.id !== movie.id) 
+      : [...favorites, movie]; 
 
     setFavorites(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save to localStorage
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); 
   };
 
 

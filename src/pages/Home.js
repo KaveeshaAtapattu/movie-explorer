@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from '../components/MovieCard';
-import { Grid, Typography, Button, Box, MenuItem, Select, Slider } from "@mui/material";
+import { Grid, Typography, Button, Box, MenuItem, Select, Slider, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -11,6 +11,7 @@ export default function Home() {
     const [year, setYear] = useState('');
     const [rating, setRating] = useState([0, 10]);
     const [genres, setGenres] = useState([]);
+    const [query, setQuery] = useState('');
 
     // Load genres for the filter dropdown
     useEffect(() => {
@@ -32,16 +33,21 @@ export default function Home() {
         const fetchMovies = async () => {
             setLoading(true);
             try {
-                const query = new URLSearchParams({
+                const queryParams = new URLSearchParams({
                     api_key: process.env.REACT_APP_TMDB_API_KEY,
                     page: currentPage,
                     ...(genre && { with_genres: genre }),
                     ...(year && { primary_release_year: year }),
+                    ...(query && { query }),
                     'vote_average.gte': rating[0],
                     'vote_average.lte': rating[1],
                 });
 
-                const response = await fetch(`https://api.themoviedb.org/3/discover/movie?${query}`);
+                const endpoint = query
+                    ? `https://api.themoviedb.org/3/search/movie?${queryParams}`
+                    : `https://api.themoviedb.org/3/discover/movie?${queryParams}`;
+
+                const response = await fetch(endpoint);
                 const data = await response.json();
                 setMovies(data.results || []);
             } catch (error) {
@@ -52,20 +58,21 @@ export default function Home() {
         };
 
         fetchMovies();
-    }, [currentPage, genre, year, rating]);
+    }, [currentPage, genre, year, rating, query]);
 
     const handlePageChange = (direction) => {
         setCurrentPage((prevPage) =>
             direction === "next" ? prevPage + 1 : Math.max(prevPage - 1, 1)
         );
     };
-
+// Filters added
     return (
         <div style={{ padding: '20px' }}>
-            <Typography variant="h4" gutterBottom>Trending Movies</Typography>
+            <Typography variant="h4" gutterBottom>Trending Movies</Typography> 
 
-            {/* Filters */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}> 
+            <Box sx={{ display: 'flex', gap: 2 }}>
                 <Select
                     value={genre}
                     onChange={(e) => {
@@ -96,23 +103,50 @@ export default function Home() {
                         return <MenuItem key={y} value={y}>{y}</MenuItem>;
                     })}
                 </Select>
-
-                <Slider
-                    value={rating}
-                    onChange={(e, newValue) => {
-                        setCurrentPage(1);
-                        setRating(newValue);
-                    }}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `${value}/10`}
-                    min={0}
-                    max={10}
-                    step={0.1}
-                    sx={{ width: 200 }}
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <TextField
+                    label="Search Movies"
+                    variant="outlined"
+                    size="small"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    sx={{ marginRight: 2 }}
                 />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setCurrentPage(1);
+                        console.log("Search query:", query);
+                    }}
+                >
+                    Search
+                </Button>
+                
             </Box>
 
-            {/* Movie Grid */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
+                    <Typography variant="subtitle1" gutterBottom>
+                        IMDb Rating
+                    </Typography>
+                    <Slider
+                        value={rating}
+                        onChange={(e, newValue) => {
+                            setCurrentPage(1);
+                            setRating(newValue);
+                        }}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={(value) => `${value}/10`}
+                        min={0}
+                        max={10}
+                        step={0.1}
+                        sx={{ width: 250 }}
+                    />
+                </Box>
+            </Box>
+
+            
             {loading ? (
                 <Typography variant="h6">Loading...</Typography>
             ) : (
@@ -131,23 +165,16 @@ export default function Home() {
                 </Grid>
             )}
 
-            {/* Pagination */}
-            <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-                <Button
-                    variant="outlined"
-                    onClick={() => handlePageChange("prev")}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={() => handlePageChange("next")}
-                    sx={{ marginLeft: "1rem" }}
-                >
-                    Next
-                </Button>
-            </Box>
+            {!loading && movies.length > 0 && (
+                <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+                    <Button
+                        variant="contained"
+                        onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                    >
+                        Load More
+                    </Button>
+                </Box>
+            )}
         </div>
     );
 }
