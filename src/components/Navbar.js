@@ -1,5 +1,5 @@
-import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Switch, styled } from "@mui/material";
+import React, {useState} from "react";
+import { AppBar, Toolbar, Typography, Button, Box, Switch, styled, IconButton, Avatar, Menu,MenuItem } from "@mui/material";
 import { Link } from "react-router-dom"; 
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -58,7 +58,21 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-const Navbar = ({ toggleTheme }) => {
+const Navbar = ({ toggleTheme, user, onLogout }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+    const handleLogout = () => {
+      handleMenuClose();
+      onLogout();
+
+  };
+
+
   return (
     <AppBar position="sticky" color="primary">
       <Toolbar>
@@ -88,10 +102,25 @@ const Navbar = ({ toggleTheme }) => {
           </Button> 
 
           <MaterialUISwitch sx={{ m: 1 }} onChange={toggleTheme}  />
+          {user && (
+          <>
 
+            <IconButton onClick={handleAvatarClick}>
+              <Avatar>{user.username?.charAt(0).toUpperCase()}</Avatar>
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleLogout}>Log out</MenuItem> 
+            </Menu>
+          </>
+          )}
         </Box>
-      </Toolbar>
-    </AppBar>
+    </Toolbar>
+  </AppBar>
   );
 };
 
