@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import {useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Grid, Box, Typography, CircularProgress } from '@mui/material';
-
+import { Container, Button, Grid, Box, Typography, CircularProgress } from '@mui/material';
+import FavoritesContext from '../context/FavoritesContext'; 
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASIC_URL = 'https://api.themoviedb.org/3';
@@ -14,6 +14,7 @@ const MovieDetail = () => {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [cast, setCast] = useState([]);
+    const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
 
     
@@ -58,6 +59,9 @@ const MovieDetail = () => {
             </Box>
           );
         }
+
+        const isFavorite = favorites.some(fav => fav.id === movie.id);
+
         return (
           <Box sx={{ padding: "2rem" }}>
             <Grid container spacing={4}>
@@ -75,6 +79,15 @@ const MovieDetail = () => {
                 <Typography variant="h4" gutterBottom>
                   {movie.title}
                 </Typography>
+
+                <Button
+                  variant={isFavorite ? "contained" : "outlined"}
+                  color="primary"
+                  onClick={() => toggleFavorite(movie)}
+                  sx={{ mb: 2 }}
+                >
+                  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                </Button>
 
                 {/* Genre tags */}
                 {movie.genres && (
