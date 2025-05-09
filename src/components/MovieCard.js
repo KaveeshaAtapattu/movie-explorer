@@ -10,7 +10,7 @@ export default function MovieCard({ movie }) {
         
     return (
         <Card sx={{ 
-            width: 300, 
+            width: 350, 
             margin: 1, 
             borderRadius: 4, 
             border: '1px solid rgba(104, 104, 104, 0.26)', 

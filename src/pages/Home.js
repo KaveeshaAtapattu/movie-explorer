@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from '../components/MovieCard';
-import { Grid, Typography, Button, Box, MenuItem, Select, Slider, TextField } from "@mui/material";
+import { Grid, Typography, Button, Box, MenuItem, Select, Slider, TextField, Container, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -66,115 +66,125 @@ export default function Home() {
         );
     };
 // Filters added
-    return (
-        <div style={{ padding: '20px' }}>
-            <Typography variant="h4" gutterBottom>Trending Movies</Typography> 
+return (
+    <Container maxWidth="lg" sx={{ pt: 4, pb: 4}}>
+      <Typography variant="h3" fontWeight="bold" gutterBottom align="center" color="primary">
+        Explore Movies
+      </Typography>
 
+      <Paper elevation={4} sx={{ p: 3, mb: 5, borderRadius: 5 }}>
+        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+          <Grid item xs={12} md={8}>
+            <Select
+              value={genre}
+              onChange={(e) => {
+                setCurrentPage(1);
+                setGenre(e.target.value);
+              }}
+              fullWidth
+              displayEmpty
+              variant="outlined"
+            >
+              <MenuItem value="">All Genres</MenuItem>
+              {genres.map((g) => (
+                <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
+              ))}
+            </Select>
+          </Grid>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}> 
-            <Box sx={{ display: 'flex', gap: 2 }}>
-                <Select
-                    value={genre}
-                    onChange={(e) => {
-                        setCurrentPage(1);
-                        setGenre(e.target.value);
-                    }}
-                    displayEmpty
-                    sx={{ width: '200px' }}
-                >
-                    <MenuItem value="">All Genres</MenuItem>
-                    {genres.map((g) => (
-                        <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
-                    ))}
-                </Select>
+          <Grid item xs={12} md={2}>
+            <Select
+              value={year}
+              onChange={(e) => {
+                setCurrentPage(1);
+                setYear(e.target.value);
+              }}
+              fullWidth
+              displayEmpty
+              variant="outlined"
+            >
+              <MenuItem value="">All Years</MenuItem>
+              {[...Array(30)].map((_, i) => {
+                const y = new Date().getFullYear() - i;
+                return <MenuItem key={y} value={y}>{y}</MenuItem>;
+              })}
+            </Select>
+          </Grid>
 
-                <Select
-                    value={year}
-                    onChange={(e) => {
-                        setCurrentPage(1);
-                        setYear(e.target.value);
-                    }}
-                    displayEmpty
-                    sx={{ width: '150px' }}
-                >
-                    <MenuItem value="">All Years</MenuItem>
-                    {[...Array(30)].map((_, i) => {
-                        const y = new Date().getFullYear() - i;
-                        return <MenuItem key={y} value={y}>{y}</MenuItem>;
-                    })}
-                </Select>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TextField
-                    label="Search Movies"
-                    variant="outlined"
-                    size="small"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    sx={{ marginRight: 2 }}
-                />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        setCurrentPage(1);
-                        console.log("Search query:", query);
-                    }}
-                >
-                    Search
-                </Button>
-                
-            </Box>
+          <Grid item xs={12} md={4}>
+            <TextField
+              label="Search Movies"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </Grid>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
-                    <Typography variant="subtitle1" gutterBottom>
-                        IMDb Rating
-                    </Typography>
-                    <Slider
-                        value={rating}
-                        onChange={(e, newValue) => {
-                            setCurrentPage(1);
-                            setRating(newValue);
-                        }}
-                        valueLabelDisplay="auto"
-                        valueLabelFormat={(value) => `${value}/10`}
-                        min={0}
-                        max={10}
-                        step={0.1}
-                        sx={{ width: 250 }}
-                    />
-                </Box>
-            </Box>
+          <Grid item xs={12} md={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => {
+                setCurrentPage(1);
+              }}
+            >
+              Search
+            </Button>
+          </Grid>
 
-            
-            {loading ? (
-                <Typography variant="h6">Loading...</Typography>
-            ) : (
-                <Grid container spacing={2}>
-                    {movies.length > 0 ? (
-                        movies.map((movie) => (
-                            <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                                <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
-                                    <MovieCard movie={movie} />
-                                </Link>
-                            </Grid>
-                        ))
-                    ) : (
-                        <Typography>No movies found for the selected filters.</Typography>
-                    )}
-                </Grid>
-            )}
+          <Grid item xs={12} md={12}>
+            <Typography gutterBottom>IMDb Rating</Typography>
+            <Slider
+              value={rating}
+              onChange={(e, newValue) => {
+                setCurrentPage(1);
+                setRating(newValue);
+              }}
+              valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${value}/10`}
+              min={0}
+              max={10}
+              step={0.5}
+              sx={{ maxWidth: 400 }}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
 
-            {!loading && movies.length > 0 && (
-                <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-                    <Button
-                        variant="contained"
-                        onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-                    >
-                        Load More
-                    </Button>
-                </Box>
-            )}
-        </div>
-    );
+      {loading ? (
+        <Typography variant="h6" align="center">Loading...</Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {movies.length > 0 ? (
+            movies.map((movie) => (
+              <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
+                <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
+                  <MovieCard movie={movie} />
+                </Link>
+              </Grid>
+            ))
+          ) : (
+            <Typography variant="h6" align="center" color="text.secondary" sx={{ width: '100%', mt: 3 }}>
+              No movies found for the selected filters.
+            </Typography>
+          )}
+        </Grid>
+      )}
+
+      {!loading && movies.length > 0 && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          >
+            Load More
+          </Button>
+        </Box>
+      )}
+    </Container>
+  );
 }

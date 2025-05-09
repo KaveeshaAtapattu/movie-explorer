@@ -1,15 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {
-  Button,
-  Grid,
-  Box,
-  Typography,
-  CircularProgress,
-  Chip,
-  Divider,
-} from "@mui/material";
+import {Button, Grid, Box, Typography, CircularProgress, Chip,useTheme, Card, CardMedia,CardContent, Divider} from "@mui/material";
 import FavoritesContext from "../context/FavoritesContext";
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
@@ -17,10 +9,13 @@ const BASIC_URL = "https://api.themoviedb.org/3";
 
 const MovieDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const [trailerKey, setTrailerKey] = useState("");
+  const theme = useTheme();
+
 
   useEffect(() => {
     const fetchMovieDetail = async () => {
@@ -83,134 +78,136 @@ const MovieDetail = () => {
   const isFavorite = favorites.some((fav) => fav.id === movie.id);
 
   return (
-    <Box sx={{ padding: "2rem" }}>
+    <Box sx={{ px: 4, py: 5, backgroundColor: theme.palette.background.default }}>
+      <Button
+        variant="outlined"
+        onClick={() => navigate('/')}
+        sx={{
+          mb: 3,
+          color: theme.palette.primary.main,
+          borderColor: theme.palette.primary.main,
+          '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            color: '#fff'
+          }
+        }}
+      >
+        ⬅ Back to Home
+      </Button>
+
       <Grid container spacing={4}>
-        {/* Left column: poster */}
         <Grid item xs={12} md={4}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            style={{ width: "100%", borderRadius: "10px" }}
-          />
+          <Card elevation={3} sx={{ borderRadius: 2 }}>
+            <CardMedia
+              component="img"
+              image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              sx={{ borderRadius: 2 }}
+            />
+          </Card>
         </Grid>
 
-        {/* Right column: details */}
         <Grid item xs={12} md={8}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" gutterBottom color="primary">
             {movie.title}
           </Typography>
 
           <Button
             variant={isFavorite ? "contained" : "outlined"}
-            color="primary"
+            color="secondary"
             onClick={() => toggleFavorite(movie)}
             sx={{ mb: 2 }}
           >
             {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
           </Button>
 
-          {/* Genre tags */}
-          {movie.genres && (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-              {movie.genres.map((genre) => (
-                <Box
-                  key={genre.id}
-                  sx={{
-                    px: 2,
-                    py: 0.5,
-                    backgroundColor: "#1976d2",
-                    color: "#fff",
-                    borderRadius: "20px",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  {genre.name}
-                </Box>
-              ))}
-            </Box>
-          )}
+          {/* Genres */}
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+            {movie.genres?.map((genre) => (
+              <Chip
+                key={genre.id}
+                label={genre.name}
+                color="primary"
+                variant="outlined"
+              />
+            ))}
+          </Box>
 
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" paragraph>
             <strong>Overview:</strong> {movie.overview}
           </Typography>
-          <Typography variant="body2">
-            <strong>Release Date:</strong> {movie.release_date}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Rating:</strong> {movie.vote_average}
-          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Release Date:</strong> {movie.release_date}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Rating:</strong> {movie.vote_average}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Popularity:</strong> {movie.popularity.toFixed(1)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Vote Count:</strong> {movie.vote_count}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Original Title:</strong> {movie.original_title}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={4}>
+              <Typography variant="body2"><strong>Language:</strong> {movie.original_language.toUpperCase()}</Typography>
+            </Grid>
+          </Grid>
 
           {trailerKey && (
-            <Box sx={{ marginTop: "20px" }}>
-              <Typography variant="h5">Watch Trailer:</Typography>
-              <iframe
-                width="100%"
-                height="500"
-                src={`https://www.youtube.com/embed/${trailerKey}`}
-                title="Trailer"
-                frameBorder="0"
-                allowFullScreen
-              />
-            </Box>
-          )}
-
-          {/* Movie Details */}
-          <Typography variant="body2" gutterBottom>
-            <strong>Original Title:</strong> {movie.original_title}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Original Language:</strong> {movie.original_language.toUpperCase()}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Popularity:</strong> {movie.popularity.toFixed(1)}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Vote Count:</strong> {movie.vote_count}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Release Date:</strong> {movie.release_date}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            <strong>Rating:</strong> {movie.vote_average}
-          </Typography>
-
-          {/* Backdrop Image */}
-          {movie.backdrop_path && (
             <Box sx={{ mt: 4 }}>
               <Typography variant="h5" gutterBottom>
-                Backdrop
+                Watch Trailer
               </Typography>
-              <img
-                src={`https://image.tmdb.org/t/p/w780${movie.backdrop_path}`}
-                alt="Backdrop"
-                style={{ width: "100%", borderRadius: "10px" }}
-              />
+              <Box sx={{ position: 'relative', paddingTop: '56.25%' }}>
+                <iframe
+                  src={`https://www.youtube.com/embed/${trailerKey}`}
+                  title="Trailer"
+                  allowFullScreen
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '12px'
+                  }}
+                />
+              </Box>
             </Box>
           )}
         </Grid>
       </Grid>
 
-      <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+      {/* Cast Section */}
+      <Typography variant="h5" sx={{ mt: 5, mb: 2 }} color="primary">
         Top Cast
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {cast.map((actor) => (
-          <Grid item xs={6} md={2} key={actor.id}>
-            <Box sx={{ textAlign: "center" }}>
-              <img
-                src={
+          <Grid item xs={6} sm={4} md={2} key={actor.id}>
+            <Card sx={{ textAlign: "center", p: 1, borderRadius: 2 }}>
+              <CardMedia
+                component="img"
+                image={
                   actor.profile_path
                     ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
                     : "https://via.placeholder.com/200x300?text=No+Image"
                 }
                 alt={actor.name}
-                style={{ width: "100%", borderRadius: "8px", height: "auto" }}
+                sx={{ borderRadius: 2, height: 220, objectFit: "cover" }}
               />
-              <Typography variant="subtitle2">{actor.name}</Typography>
-              <Typography variant="body2" color="textSecondary">
-                as {actor.character}
-              </Typography>
-            </Box>
+              <CardContent>
+                <Typography variant="subtitle2">{actor.name}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  as {actor.character}
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
         ))}
       </Grid>
