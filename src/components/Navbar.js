@@ -1,8 +1,8 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import { Link } from "react-router-dom"; // Import Link from React Router
+import { AppBar, Toolbar, Typography, Button, Box, Switch } from "@mui/material";
+import { Link } from "react-router-dom"; 
 
-const Navbar = () => {
+const Navbar = ({ toggleTheme }) => {
   return (
     <AppBar position="sticky" color="primary">
       <Toolbar>
@@ -10,13 +10,13 @@ const Navbar = () => {
           Movie Explorer
         </Typography>
 
-        {/* Navigation Links */}
+        
         <Box>
           <Button
             color="inherit"
             component={Link}
             to="/"
-            sx={{ marginRight: 2 }} // Add some margin for spacing
+            sx={{ marginRight: 2 }} 
           >
             Home
           </Button>
@@ -30,6 +30,9 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/search" sx={{ marginLeft: 2 }}>
             Search
           </Button> 
+
+          <Switch onChange={toggleTheme} /> 
+
         </Box>
       </Toolbar>
     </AppBar>
