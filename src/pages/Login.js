@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, Avatar, Stack, useTheme } from '@mui/material';
+import LockOutLinedIcon from '@mui/icons-material/LockOutlined';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ const Login = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleLogin = () => {
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
@@ -43,15 +45,41 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Paper elevation={3} sx={{ padding: 4, width: 300 }}>
-        <Typography variant="h5" gutterBottom>
-          {isRegistering ? 'Register' : 'Login'}
-        </Typography>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      sx={{
+        background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.background.default})`,
+      }}
+    >
+      <Paper
+        elevation={6}
+        sx={{
+          padding: 6,
+          borderRadius: 4,
+          width: 380,
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <Stack alignItems="center" spacing={1} mb={3}>
+          <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+            <LockOutLinedIcon />
+          </Avatar>
+          <Typography variant="h5" fontWeight="bold">
+            {isRegistering ? 'Create Account' : 'Movie Explorer'}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {isRegistering ? 'Please register to continue' : 'Login to your account'}
+          </Typography>
+        </Stack>
+
         <TextField
           label="Username"
           fullWidth
           margin="normal"
+          variant="outlined"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -60,6 +88,7 @@ const Login = ({ onLogin }) => {
           type="password"
           fullWidth
           margin="normal"
+          variant="outlined"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -69,27 +98,31 @@ const Login = ({ onLogin }) => {
             type="password"
             fullWidth
             margin="normal"
+            variant="outlined"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         )}
+
         <Button
           variant="contained"
           color="primary"
           fullWidth
+          sx={{ mt: 3, py: 1.3, fontWeight: 'bold', borderRadius: 2 }}
           onClick={isRegistering ? handleRegister : handleLogin}
-          sx={{ mt: 2 }}
         >
-          {isRegistering ? 'Register' : 'Log In'}
+          {isRegistering ? 'Sign Up' : 'Sign In'}
         </Button>
+
         <Button
           variant="text"
-          color="secondary"
           fullWidth
+          sx={{ mt: 2 }}
           onClick={() => setIsRegistering(!isRegistering)}
-          sx={{ mt: 1 }}
         >
-          {isRegistering ? 'Already have an account? Log In' : "Don't have an account? Register"}
+          {isRegistering
+            ? 'Already have an account? Log In'
+            : "Don't have an account? Register"}
         </Button>
       </Paper>
     </Box>

@@ -1,19 +1,28 @@
 import React, { useContext } from 'react';
 import { Grid, Box, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FavoritesContext from '../context/FavoritesContext'; 
 
 const Favorites = () => {
   const { favorites, toggleFavorite } = useContext(FavoritesContext); 
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ padding: "2rem" }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigate('/')}
+        sx={{ marginBottom: "1rem" }}
+      >
+        Back to Home
+      </Button>
+
       <Typography variant="h4" gutterBottom>
         Your Favorite Movies
       </Typography>
 
       {favorites.length === 0 ? (
-        
         <Typography variant="body1">No favorites added yet.</Typography>
       ) : (
         <Grid container spacing={4}>
@@ -34,7 +43,6 @@ const Favorites = () => {
                   onClick={() => toggleFavorite(movie)}
                 >
                   Remove from Favorites
-
                 </Button>
               </Box>
             </Grid>
