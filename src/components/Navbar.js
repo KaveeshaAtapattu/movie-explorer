@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Switch, styled, IconButton, Avatar, Menu,MenuItem } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, useTheme, Switch, styled, IconButton, Avatar, Menu,MenuItem } from "@mui/material";
 import { Link } from "react-router-dom"; 
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -60,6 +60,9 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 const Navbar = ({ toggleTheme, user, onLogout }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const theme = useTheme();
+
+  
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -74,53 +77,98 @@ const Navbar = ({ toggleTheme, user, onLogout }) => {
 
 
   return (
-    <AppBar position="sticky" color="primary">
+    <AppBar
+      position="sticky"
+      sx={{
+        background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+        boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+      }}
+    >
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: 600 }}>
           Movie Explorer
         </Typography>
 
-        
-        <Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Button
-            color="inherit"
             component={Link}
             to="/"
-            sx={{ marginRight: 2 }} 
+            sx={{
+              color: "white",
+              fontWeight: 500,
+              '&:hover': {
+                color: theme.palette.secondary.light,
+              },
+            }}
           >
             Home
           </Button>
           <Button
-            color="inherit"
             component={Link}
             to="/favorites"
+            sx={{
+              color: "white",
+              fontWeight: 500,
+              '&:hover': {
+                color: theme.palette.secondary.light,
+              },
+            }}
           >
             Favorites
           </Button>
-          <Button color="inherit" component={Link} to="/search" sx={{ marginLeft: 2 }}>
+          <Button
+            component={Link}
+            to="/search"
+            sx={{
+              color: "white",
+              fontWeight: 500,
+              '&:hover': {
+                color: theme.palette.secondary.light,
+              },
+            }}
+          >
             Search
-          </Button> 
+          </Button>
 
-          <MaterialUISwitch sx={{ m: 1 }} onChange={toggleTheme}  />
+          <MaterialUISwitch onChange={toggleTheme} />
+
           {user && (
-          <>
-
-            <IconButton onClick={handleAvatarClick}>
-              <Avatar>{user.username?.charAt(0).toUpperCase()}</Avatar>
-            </IconButton>
-
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
+            <>
+              <IconButton onClick={handleAvatarClick} sx={{ ml: 1 }}>
+                <Avatar
+                  sx={{
+                    bgcolor: theme.palette.secondary.light,
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: 700,
+                    border: `2px solid ${theme.palette.primary.main}`,
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  {user.username?.charAt(0).toUpperCase()}
+                </Avatar>
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    minWidth: 150,
+                    borderRadius: 2,
+                    boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+                  },
+                }}
               >
-                <MenuItem onClick={handleLogout}>Log out</MenuItem> 
-            </Menu>
-          </>
+                <MenuItem onClick={handleLogout}>Log out</MenuItem>
+              </Menu>
+            </>
           )}
         </Box>
-    </Toolbar>
-  </AppBar>
+      </Toolbar>
+    </AppBar>
   );
 };
 
