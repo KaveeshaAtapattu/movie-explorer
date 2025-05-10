@@ -6,7 +6,6 @@ import Favorites from './pages/Favorites';
 import MovieDetail from './pages/MovieDetail';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Navbar from './components/Navbar';
-import SearchPage from './pages/SearchPage';
 import './App.css';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 
@@ -64,7 +63,7 @@ function App() {
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/search" element={<SearchPage />} />
+
           </Routes>
         </Router>
       </ThemeProvider>

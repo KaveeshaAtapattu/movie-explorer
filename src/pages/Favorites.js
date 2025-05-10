@@ -3,6 +3,8 @@ import { Grid, Box, Typography, Button, Card, CardMedia, CardContent, CardAction
 import { Link, useNavigate } from 'react-router-dom';
 import FavoritesContext from '../context/FavoritesContext'; 
 
+
+// Favorites component to display the list of favorite movies
 const Favorites = () => {
   const { favorites, toggleFavorite } = useContext(FavoritesContext); 
   const navigate = useNavigate();
@@ -23,7 +25,9 @@ const Favorites = () => {
             color: '#fff'
           }
         }}
+      
       >
+      {/* Button to navigate back to home page */}
         ⬅ Back to Home
       </Button>
 
@@ -49,6 +53,7 @@ const Favorites = () => {
                   }
                 }}
               >
+                {/* Link to movie detail page */}
                 <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <CardMedia
                     component="img"

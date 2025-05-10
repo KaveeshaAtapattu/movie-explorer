@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
     const [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // show loading state
     const [currentPage, setCurrentPage] = useState(1);
-    const [genre, setGenre] = useState('');
-    const [year, setYear] = useState('');
-    const [rating, setRating] = useState([0, 10]);
+    const [genre, setGenre] = useState(''); // select genre
+    const [year, setYear] = useState(''); // select year
+    const [rating, setRating] = useState([0, 10]); // select rating
     const [genres, setGenres] = useState([]);
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState(''); // search query
 
     // Load genres for the filter dropdown
     useEffect(() => {
@@ -67,124 +67,117 @@ export default function Home() {
     };
 // Filters added
 return (
-    <Container maxWidth="lg" sx={{ pt: 4, pb: 4}}>
-      <Typography variant="h3" fontWeight="bold" gutterBottom align="center" color="primary">
-        Explore Movies
-      </Typography>
+  <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
+    <Typography variant="h3" fontWeight="bold" gutterBottom align="center" color="primary">
+    Explore Movies
+    </Typography>
+    <Paper elevation={4} sx={{ p: 3, mb: 5, borderRadius: 5 }}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={3}>
+      {/* Genre and Year Selects */}
+      <Box display="flex" gap={2} flexWrap="wrap">
+      <Select
+        value={genre}
+        onChange={(e) => {
+        setCurrentPage(1);
+        setGenre(e.target.value);
+        }}
+        displayEmpty
+        variant="outlined"
+        sx={{ minWidth: 150 }}
+      >
+        <MenuItem value="">All Genres</MenuItem>
+        {genres.map((g) => (
+        <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
+        ))}
+      </Select>
 
-      <Paper elevation={4} sx={{ p: 3, mb: 5, borderRadius: 5 }}>
-        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-          <Grid item xs={12} md={8}>
-            <Select
-              value={genre}
-              onChange={(e) => {
-                setCurrentPage(1);
-                setGenre(e.target.value);
-              }}
-              fullWidth
-              displayEmpty
-              variant="outlined"
-            >
-              <MenuItem value="">All Genres</MenuItem>
-              {genres.map((g) => (
-                <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
-              ))}
-            </Select>
-          </Grid>
+      <Select
+        value={year}
+        onChange={(e) => {
+        setCurrentPage(1);
+        setYear(e.target.value);
+        }}
+        displayEmpty
+        variant="outlined"
+        sx={{ minWidth: 150 }}
+      >
+        <MenuItem value="">All Years</MenuItem>
+        {[...Array(30)].map((_, i) => {
+        const y = new Date().getFullYear() - i;
+        return <MenuItem key={y} value={y}>{y}</MenuItem>;
+        })}
+      </Select>
+      </Box>
 
-          <Grid item xs={12} md={2}>
-            <Select
-              value={year}
-              onChange={(e) => {
-                setCurrentPage(1);
-                setYear(e.target.value);
-              }}
-              fullWidth
-              displayEmpty
-              variant="outlined"
-            >
-              <MenuItem value="">All Years</MenuItem>
-              {[...Array(30)].map((_, i) => {
-                const y = new Date().getFullYear() - i;
-                return <MenuItem key={y} value={y}>{y}</MenuItem>;
-              })}
-            </Select>
-          </Grid>
+      {/* Search Bar Centered */}
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 200 }}>
+      <Box sx={{ width: '100%', maxWidth: 600 }}>
+        <TextField
+        label="Search Movies"
+        variant="outlined"
+        fullWidth
+        size="small"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        />
+      </Box>
+      </Box>
 
-          <Grid item xs={12} md={4}>
-            <TextField
-              label="Search Movies"
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </Grid>
+      {/* IMDb Rating Aligned Right */}
+      <Box sx={{ width: 300 }}>
+      <Typography gutterBottom>IMDb Rating</Typography>
+      
+      <Slider
+        value={rating}
+        onChange={(e, newValue) => {
+        setCurrentPage(1);
+        setRating(newValue);
+        }}
+        valueLabelDisplay="auto"
+        valueLabelFormat={(value) => `${value}/10`}
+        min={0}
+        max={10}
+        step={0.5}
+      />
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="body2">{rating[0]}</Typography>
+        <Typography variant="body2">{rating[1]}</Typography>
+      </Box>
+      </Box>
+    </Box>
+    </Paper>
 
-          <Grid item xs={12} md={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={() => {
-                setCurrentPage(1);
-              }}
-            >
-              Search
-            </Button>
-          </Grid>
-
-          <Grid item xs={12} md={12}>
-            <Typography gutterBottom>IMDb Rating</Typography>
-            <Slider
-              value={rating}
-              onChange={(e, newValue) => {
-                setCurrentPage(1);
-                setRating(newValue);
-              }}
-              valueLabelDisplay="auto"
-              valueLabelFormat={(value) => `${value}/10`}
-              min={0}
-              max={10}
-              step={0.5}
-              sx={{ maxWidth: 400 }}
-            />
-          </Grid>
+    {loading ? (
+    <Typography variant="h6" align="center">Loading...</Typography>
+    ) : (
+    <Grid container spacing={3}>
+      {movies.length > 0 ? (
+      movies.map((movie) => (
+        <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
+        <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
+          <MovieCard movie={movie} />
+        </Link>
         </Grid>
-      </Paper>
-
-      {loading ? (
-        <Typography variant="h6" align="center">Loading...</Typography>
+      ))
       ) : (
-        <Grid container spacing={3}>
-          {movies.length > 0 ? (
-            movies.map((movie) => (
-              <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
-                <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none' }}>
-                  <MovieCard movie={movie} />
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <Typography variant="h6" align="center" color="text.secondary" sx={{ width: '100%', mt: 3 }}>
-              No movies found for the selected filters.
-            </Typography>
-          )}
-        </Grid>
+      <Typography variant="h6" align="center" color="text.secondary" sx={{ width: '100%', mt: 3 }}>
+        No movies found for the selected filters.
+      </Typography>
       )}
+    </Grid>
+    )}
 
-      {!loading && movies.length > 0 && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-          >
-            Load More
-          </Button>
-        </Box>
-      )}
-    </Container>
+    {!loading && movies.length > 0 && (
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+      <Button
+      variant="contained"
+      size="large"
+      onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+      >
+      Load More
+      </Button>
+    </Box>
+    )}
+  </Container>
   );
 }
