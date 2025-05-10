@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Movie Explorer
+
+Movie Explorer is a web application that allows users to search for movies, view detailed information about them, and manage their favorite movie lists. It is built using React and leverages modern web development practices to deliver a seamless user experience.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
