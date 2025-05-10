@@ -1,29 +1,11 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  useTheme,
-  useMediaQuery,
-  Switch,
-  styled,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import {AppBar,Toolbar,Typography,Button,Box,useTheme,useMediaQuery,Switch,styled,IconButton,Avatar,Menu,MenuItem,Drawer,List,ListItem,ListItemText} from "@mui/material";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 
 // Dark/light mode switch
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-  // ... same as before
+ 
 }));
 
 const Navbar = ({ toggleTheme, user, onLogout }) => {
@@ -39,12 +21,13 @@ const Navbar = ({ toggleTheme, user, onLogout }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
+// logs out the user
   const handleLogout = () => {
     handleMenuClose();
     onLogout();
   };
 
+  // Toggles the drawer open/close
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
@@ -65,7 +48,7 @@ const Navbar = ({ toggleTheme, user, onLogout }) => {
             Movie Explorer
           </Typography>
 
-          {/* Mobile View: Hamburger Menu */}
+          {/* Hamburger Menu */}
           {isMobile ? (
             <>
               <IconButton
@@ -145,7 +128,7 @@ const Navbar = ({ toggleTheme, user, onLogout }) => {
               >
                 Favorites
               </Button>
-
+                {/* Theme Switch for light and dark mode*/}
               <MaterialUISwitch onChange={toggleTheme} />
 
               {user && (

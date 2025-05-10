@@ -7,7 +7,7 @@ import FavoritesContext from '../context/FavoritesContext';
 // Favorites component to display the list of favorite movies
 const Favorites = () => {
   const { favorites, toggleFavorite } = useContext(FavoritesContext); 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navigate between routes
   const theme = useTheme();
 
 
