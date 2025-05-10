@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false); // toggle between login and register
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
   const theme = useTheme();
@@ -25,7 +25,7 @@ const Login = ({ onLogin }) => {
     if (user) {
       onLogin({ username });
       toast.success('Login successful!');
-      navigate('/');
+      navigate('/'); // to homepage
     } else {
       toast.error('Invalid credentials. Please try again.');
     }
@@ -52,6 +52,7 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
+    {/*toast message container*/}
       <ToastContainer position="top-right" autoClose={3000} />
       <Box
         display="flex"
@@ -83,6 +84,7 @@ const Login = ({ onLogin }) => {
             </Typography>
           </Stack>
 
+          {/*Input username*/}
           <TextField
             label="Username"
             fullWidth
@@ -91,6 +93,7 @@ const Login = ({ onLogin }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+          {/*Input passowrd*/}
           <TextField
             label="Password"
             type="password"
@@ -99,7 +102,10 @@ const Login = ({ onLogin }) => {
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+
           />
+
+          {/*confirm password field*/}
           {isRegistering && (
             <TextField
               label="Confirm Password"
@@ -111,7 +117,7 @@ const Login = ({ onLogin }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           )}
-
+          {/*submit button*/}
           <Button
             variant="contained"
             color="primary"
@@ -122,6 +128,7 @@ const Login = ({ onLogin }) => {
             {isRegistering ? 'Sign Up' : 'Sign In'}
           </Button>
 
+          {/*login and register mode*/}
           <Button
             variant="text"
             fullWidth

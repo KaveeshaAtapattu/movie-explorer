@@ -65,7 +65,8 @@ export default function Home() {
             direction === "next" ? prevPage + 1 : Math.max(prevPage - 1, 1)
         );
     };
-// Filters added
+
+    
 return (
   <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
     <Typography variant="h3" fontWeight="bold" gutterBottom align="center" color="primary">
@@ -109,7 +110,7 @@ return (
       </Select>
       </Box>
 
-      {/* Search Bar Centered */}
+      {/* Search Bar  */}
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 200 }}>
       <Box sx={{ width: '100%', maxWidth: 600 }}>
         <TextField
@@ -123,7 +124,7 @@ return (
       </Box>
       </Box>
 
-      {/* IMDb Rating Aligned Right */}
+      {/* IMDb Rating */}
       <Box sx={{ width: 300 }}>
       <Typography gutterBottom>IMDb Rating</Typography>
       

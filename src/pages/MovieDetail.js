@@ -13,11 +13,12 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState(null);
   const [cast, setCast] = useState([]);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const [trailerKey, setTrailerKey] = useState("");
+  const [trailerKey, setTrailerKey] = useState(""); //store trailer video key
   const theme = useTheme();
 
 
   useEffect(() => {
+    // fetch movie details using API
     const fetchMovieDetail = async () => {
       try {
         const response = await axios.get(
@@ -28,7 +29,7 @@ const MovieDetail = () => {
         console.error("Error fetching movie detail:", error);
       }
     };
-
+    //fetch cast details
     const fetchCast = async () => {
       try {
         const response = await axios.get(
@@ -40,6 +41,8 @@ const MovieDetail = () => {
       }
     };
 
+
+    //fetch trailer key
     const fetchTrailer = async () => {
       try {
         const response = await axios.get(
@@ -61,6 +64,7 @@ const MovieDetail = () => {
     fetchTrailer();
   }, [id]);
 
+  // loading indicater
   if (!movie) {
     return (
       <Box
@@ -157,7 +161,7 @@ const MovieDetail = () => {
               <Typography variant="body2"><strong>Language:</strong> {movie.original_language.toUpperCase()}</Typography>
             </Grid>
           </Grid>
-
+            {/*Show trailer if key available*/}
           {trailerKey && (
             <Box sx={{ mt: 4 }}>
               <Typography variant="h5" gutterBottom>
